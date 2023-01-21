@@ -42,7 +42,7 @@ const App = () => {
         } else {
           setStatus(Status.REJECTED);
           toast.info(
-            `it's a pity, but the query with the name ${desiredImage} did not give results!`
+            `!!!it's a pity, but the query with the name ${desiredImage} did not give results!!!`
           );
         }
       } catch (error) {
