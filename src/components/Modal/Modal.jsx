@@ -1,9 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import { Overlay, ModalImg } from './Modal.styled';
-
-const modalRoot = document.querySelector('#modal_root');
 
 export default function Modal({ onClose, largeImageURL, tags }) {
   useEffect(() => {
@@ -25,18 +22,17 @@ export default function Modal({ onClose, largeImageURL, tags }) {
     }
   }
 
-  return createPortal(
+  return (
     <Overlay onClick={closeModal}>
       <ModalImg>
         <img src={largeImageURL} alt={tags} />
       </ModalImg>
-    </Overlay>,
-    modalRoot
+    </Overlay>
   );
 }
 
 Modal.propTypes = {
   onClose: PropTypes.func.isRequired,
-  webkitURL: PropTypes.string.isRequired,
+  largeImageURL: PropTypes.string.isRequired,
   tags: PropTypes.string.isRequired,
 };

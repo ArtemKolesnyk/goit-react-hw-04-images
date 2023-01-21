@@ -18,46 +18,40 @@ export const Status = {
 };
 
 const App = () => {
-  const [desiredImage, setDesireImage] = useState('');
+  const [desiredImage, setDesiredImage] = useState('');
   const [page, setPage] = useState(1);
   const [images, setImages] = useState([]);
   const [status, setStatus] = useState(Status.IDLE);
-  //const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);
 
   useEffect(() => {
     if (desiredImage === '') {
       return;
     }
-
-    const controller = new AbortController();
-    async function getData() {
+    const fetchData = async () => {
       try {
-        const hits = await fetchImage(desiredImage, page, controller);
         setStatus(Status.PENDING);
+        const hits = await fetchImage(desiredImage, page);
         if (hits.length !== 0) {
           setStatus(Status.RESOLVED);
-          toast.success(`Enjoy viewing the pictures!`);
-          console.log(hits);
-          // setImages(prevImg => [...prevImg, ...hits]);
+          toast.success('Enjoy viewing the pictures!');
+          setImages(prev => [...prev, ...hits]);
         } else {
           setStatus(Status.REJECTED);
-          toast.info(
-            `!!!it's a pity, but the query with the name ${desiredImage} did not give results!!!`
+          return toast.info(
+            `!!!It's a pity, but the query with the name ${desiredImage} did not give results!!!`
           );
         }
       } catch (error) {
         console.log(error);
         setStatus(Status.REJECTED);
       }
-    }
-    getData();
-    return () => {
-      controller.abort();
     };
+    fetchData().catch(console.error);
   }, [desiredImage, page]);
 
   const handleFormSubmit = e => {
-    setDesireImage(e);
+    setDesiredImage(e);
     setImages([]);
     setPage(1);
     setStatus(Status.IDLE);
@@ -75,7 +69,7 @@ const App = () => {
         <Searchbar onSubmit={handleFormSubmit} />
         {status === 'pending' && <Loader />}
         <ImageGallery images={images} />
-        {images.length !== 0 && status === 'resolved' && (
+        {images !== [] && status === 'resolved' && (
           <BtnLoadMore
             type="button"
             onClick={() => setPage(prevPage => prevPage + 1)}

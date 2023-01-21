@@ -11,7 +11,7 @@ const ImageGalleryItem = ({ webformatURL, tags, largeImageURL }) => {
       <GalleryItemImage
         src={webformatURL}
         alt={tags}
-        onClick={setIsOpenModal(prevState => !prevState)}
+        onClick={() => setIsOpenModal(prevState => !prevState)}
       />
       {isOpenModal && (
         <Modal
